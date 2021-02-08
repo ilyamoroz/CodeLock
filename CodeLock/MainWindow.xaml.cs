@@ -4,16 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Threading;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using CodeLock.State;
 
 namespace CodeLock
 {
@@ -22,10 +15,31 @@ namespace CodeLock
     /// </summary>
     public partial class MainWindow : Window
     {
-
+        private bool isOpen = false;
+        private int openTime = 0;
+        Door door;
         public MainWindow()
         {
             InitializeComponent();
+            door = new Door(new CloseDoorState());
+
+            DispatcherTimer timer = new DispatcherTimer();
+            timer.Tick += new EventHandler(timer_Tick);
+            timer.Interval = new TimeSpan(0, 0, 1);
+            timer.Start();
+        }
+        private void timer_Tick(object sender, EventArgs e)
+        {
+            if (isOpen)
+            {
+                openTime++;
+            }
+            timerLabel.Content = openTime.ToString();
+            if (openTime == 60)
+            {
+                openTime = 0;
+                LockDoor();
+            }
         }
         private void Button1_Click(object sender, RoutedEventArgs e)
         {
@@ -87,32 +101,16 @@ namespace CodeLock
             }
             if (GetPasswordHash(PasswordField.Text) == str)
             {
-                StatusLabel.Content = "Status: Unlock";
+                StatusLabel.Content = "Status: " + door.OpenDoor();
+                isOpen = true;
             }
-            LockDoor();
+            
         }
         private void LockDoor()
         {
-            MessageBox.Show("Door is open");
-            StatusLabel.Content = "Status: Lock";
-
-
+            StatusLabel.Content = "Status: " + door.CloseDoor();
             PasswordField.Text = "";
-
-            /*int lockDoor = 0;
-            DispatcherTimer dispatcherTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(1) };
-            dispatcherTimer.Start();
-
-            dispatcherTimer.Tick += new EventHandler((object c, EventArgs eventArgs) =>
-            {
-                lockDoor++;
-                if (lockDoor == 1000)
-                {
-                    
-                    StatusLabel.Content = "Status: Lock";
-                    ((DispatcherTimer)c).Stop();
-                }
-            });*/
+            isOpen = false;
         }
         private void ClearButton_Click(object sender, RoutedEventArgs e)
         {
@@ -126,10 +124,6 @@ namespace CodeLock
             {
                 s = s.Substring(0, s.Length - 1);
             }
-            else
-            {
-                s = "0";
-            }
 
             PasswordField.Text = s;
         }
@@ -139,7 +133,7 @@ namespace CodeLock
             var hash = md5.ComputeHash(Encoding.UTF8.GetBytes(inputText));
             return Convert.ToBase64String(hash);
         }
-        private void GenerateNewPassword()
+        private void GeneratePassword()
         {
             using (PasswordContext context = new PasswordContext())
             {

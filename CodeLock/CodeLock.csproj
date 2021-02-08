@@ -67,6 +67,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="State\CloseDoorState.cs" />
+    <Compile Include="State\Door.cs" />
+    <Compile Include="State\IDoorState.cs" />
+    <Compile Include="State\OpenDoorState.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

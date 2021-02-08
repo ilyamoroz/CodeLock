@@ -24,5 +24,6 @@
         <Label x:Name="StatusLabel" Content="Status:  Lock" HorizontalAlignment="Left" Margin="224,107,0,0" VerticalAlignment="Top"/>
         <Button x:Name="DelButton" Content="&lt;-" HorizontalAlignment="Left" Margin="294,274,0,0" VerticalAlignment="Top" Width="34" Click="DelButton_Click"/>
         <Button x:Name="ClearButton" Content="C" HorizontalAlignment="Left" Margin="199,274,0,0" VerticalAlignment="Top" Width="35" Click="ClearButton_Click"/>
+        <Label x:Name="timerLabel" Content="Label" HorizontalAlignment="Left" Margin="533,61,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>
