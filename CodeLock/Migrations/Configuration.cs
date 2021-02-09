@@ -5,7 +5,7 @@
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<CodeLock.DataModel.PasswordContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<CodeLock.DataModel.DataBaseContext>
     {
         public Configuration()
         {
@@ -13,7 +13,7 @@
             ContextKey = "CodeLock.DataModel.PasswordContext";
         }
 
-        protected override void Seed(CodeLock.DataModel.PasswordContext context)
+        protected override void Seed(CodeLock.DataModel.DataBaseContext context)
         {
             //  This method will be called after migrating to the latest version.
 

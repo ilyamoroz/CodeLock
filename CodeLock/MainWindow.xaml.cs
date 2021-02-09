@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Threading;
 using System.Windows;
@@ -21,7 +20,7 @@ namespace CodeLock
         Door door;
 
         private bool IsAdmin = false;
-
+        Database db = new Database();
         public MainWindow()
         {
             InitializeComponent();
@@ -31,33 +30,11 @@ namespace CodeLock
             timer.Tick += new EventHandler(timer_Tick);
             timer.Interval = new TimeSpan(0, 0, 1);
             timer.Start();
-            SetBasePassword();
-            SetBaseAdminPassword();
+            db.SetBasePassword();
+            db.SetBaseAdminPassword();
         }
-        private void SetBaseAdminPassword()
-        {
-            using (PasswordContext context = new PasswordContext())
-            {
-                if (!context.admins.Any(x => x.AdminID == 1))
-                {
-                    Admin admin = new Admin();
-                    admin.AdminPassword = GetPasswordHash("9999");
-                    context.admins.Add(admin);
-                    context.SaveChanges();
-                }
-            }
-
-        }
-        private void SetBasePassword()
-        {
-            using (PasswordContext context = new PasswordContext())
-            {
-                if (!context.passwords.Any(x => x.Available == "Available"))
-                {
-                    GeneratePassword("1111");
-                }
-            }
-        }
+        
+        
         private void timer_Tick(object sender, EventArgs e)
         {
             if (isOpen)
@@ -70,16 +47,7 @@ namespace CodeLock
                 LockDoor();
             }
         }
-        private void ChangePassword(string newPassword)
-        {
-            using (PasswordContext context = new PasswordContext())
-            {
-                Password pass = context.passwords.Single(x => x.Available == "Available");
-                pass.Available = "Non-Available";
-                context.SaveChanges();
-            }
-            GeneratePassword(newPassword);
-        }
+        
         private void Button1_Click(object sender, RoutedEventArgs e)
         {
             if(PasswordField.Text.Length < 4)
@@ -138,16 +106,16 @@ namespace CodeLock
         }
         private void Control_Click(object sender, RoutedEventArgs e)
         {
-            if (door.currentState.GetType().Name.ToString() == "OpenDoorState")
+            if (door.currentState.GetType().Name.ToString() == nameof(OpenDoorState))
             {
                 if (IsAdmin)
                 {
-                    ChangePassword(PasswordField.Text);
+                    db.ChangePassword(PasswordField.Text);
 
                     User_label.Content = "";
                 }
 
-                if (GetPasswordHash(PasswordField.Text) == GetAdminPassword() && IsAdmin == false)
+                if (db.GetPasswordHash(PasswordField.Text) == GetAdminPassword() && IsAdmin == false)
                 {
                     User_label.Content = "Admin";
                     PasswordField.Text = "";
@@ -159,7 +127,7 @@ namespace CodeLock
         private string GetAdminPassword()
         {
             string str = "";
-            using (PasswordContext context = new PasswordContext())
+            using (DataBaseContext context = new DataBaseContext())
             {
                 var s = context.admins.Single(x => x.AdminID == 1);
                 str = s.AdminPassword;
@@ -168,19 +136,12 @@ namespace CodeLock
         }
         private void OpenButton_Click(object sender, RoutedEventArgs e)
         {
-            string str = "";
-            using (PasswordContext context = new PasswordContext())
-            {
-                var s = context.passwords.Single(x => x.Available == "Available");
-                str = s.Pass;    
-            }
-            if (GetPasswordHash(PasswordField.Text) == str)
+            if (db.GetPasswordHash(PasswordField.Text) == db.GetPassword())
             {
                 StatusLabel.Content = "Status: " + door.OpenDoor();
                 isOpen = true;
             }
             PasswordField.Text = "";
-            
         }
         private void LockDoor()
         {
@@ -202,22 +163,7 @@ namespace CodeLock
             }
             PasswordField.Text = s;
         }
-        private string GetPasswordHash(string inputText)
-        {
-            var md5 = MD5.Create();
-            var hash = md5.ComputeHash(Encoding.UTF8.GetBytes(inputText));
-            return Convert.ToBase64String(hash);
-        }
-        private void GeneratePassword(string str)
-        {
-            using (PasswordContext context = new PasswordContext())
-            {
-                Password pass = new Password();
-                pass.Pass = GetPasswordHash(str);
-                pass.Available = "Available";
-                context.passwords.Add(pass);
-                context.SaveChanges();
-            }
-        }
+        
+        
     }
 }

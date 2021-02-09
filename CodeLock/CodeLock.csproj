@@ -67,6 +67,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Database.cs" />
     <Compile Include="DataModel\Admin.cs" />
     <Compile Include="Migrations\202102091548467_InitialCreate.cs" />
     <Compile Include="Migrations\202102091548467_InitialCreate.designer.cs">
@@ -90,7 +91,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DataModel\Password.cs" />
-    <Compile Include="DataModel\PasswordContext.cs" />
+    <Compile Include="DataModel\DataBaseContext.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

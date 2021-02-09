@@ -4,10 +4,10 @@
     using System.Data.Entity;
     using System.Linq;
 
-    public class PasswordContext : DbContext
+    public class DataBaseContext : DbContext
     {
         
-        public PasswordContext()
+        public DataBaseContext()
             : base("name=PasswordContext")
         {
         }
