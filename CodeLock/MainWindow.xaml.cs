@@ -19,6 +19,9 @@ namespace CodeLock
         private bool isOpen = false;
         private int openTime = 0;
         Door door;
+
+        private bool IsAdmin = false;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -66,6 +69,16 @@ namespace CodeLock
                 openTime = 0;
                 LockDoor();
             }
+        }
+        private void ChangePassword(string newPassword)
+        {
+            using (PasswordContext context = new PasswordContext())
+            {
+                Password pass = context.passwords.Single(x => x.Available == "Available");
+                pass.Available = "Non-Available";
+                context.SaveChanges();
+            }
+            GeneratePassword(newPassword);
         }
         private void Button1_Click(object sender, RoutedEventArgs e)
         {
@@ -125,6 +138,33 @@ namespace CodeLock
         }
         private void Control_Click(object sender, RoutedEventArgs e)
         {
+            if (door.currentState.GetType().Name.ToString() == "OpenDoorState")
+            {
+                if (IsAdmin)
+                {
+                    ChangePassword(PasswordField.Text);
+
+                    User_label.Content = "";
+                }
+
+                if (GetPasswordHash(PasswordField.Text) == GetAdminPassword() && IsAdmin == false)
+                {
+                    User_label.Content = "Admin";
+                    PasswordField.Text = "";
+                    IsAdmin = true;
+                }
+                PasswordField.Text = "";
+            }
+        }
+        private string GetAdminPassword()
+        {
+            string str = "";
+            using (PasswordContext context = new PasswordContext())
+            {
+                var s = context.admins.Single(x => x.AdminID == 1);
+                str = s.AdminPassword;
+            }
+            return str;
         }
         private void OpenButton_Click(object sender, RoutedEventArgs e)
         {
@@ -139,6 +179,7 @@ namespace CodeLock
                 StatusLabel.Content = "Status: " + door.OpenDoor();
                 isOpen = true;
             }
+            PasswordField.Text = "";
             
         }
         private void LockDoor()

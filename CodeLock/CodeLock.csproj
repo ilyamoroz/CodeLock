@@ -130,7 +130,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="logo.ico" />
+    <Resource Include="Image\icon.jpg" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="icon.jpg" />
