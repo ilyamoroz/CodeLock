@@ -12,6 +12,7 @@
         {
         }
         public DbSet<Password> passwords { get; set; }
+        public DbSet<Admin> admins { get; set; }
     }
 
    

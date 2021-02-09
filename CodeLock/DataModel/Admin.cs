@@ -7,14 +7,12 @@ using System.Threading.Tasks;
 
 namespace CodeLock.DataModel
 {
-    public class Password
+    public class Admin
     {
-        public int PasswordID { get; set; }  
+        public int AdminID { get; set; }
 
         [MaxLength(1000)]
         [Required]
-        public string Pass { get; set; }
-        [Required]
-        public string Available { get; set; }
+        public string AdminPassword { get; set; }
     }
 }

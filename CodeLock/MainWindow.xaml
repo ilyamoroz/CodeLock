@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CodeLock"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800" Icon="icon.jpg">
     <Grid>
-        <TextBox x:Name="PasswordField" HorizontalAlignment="Left" Height="23" Margin="199,160,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="128"/>
+        <TextBox x:Name="PasswordField" HorizontalAlignment="Left" Height="23" Margin="199,160,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="128" IsEnabled="False"/>
         <Button x:Name="Button1" Content="1" HorizontalAlignment="Left" Margin="199,197,0,0" VerticalAlignment="Top" Width="35" Click="Button1_Click"/>
         <Button x:Name="Button2" Content="2" HorizontalAlignment="Left" Margin="245,197,0,0" VerticalAlignment="Top" Width="35" Click="Button2_Click"/>
         <Button x:Name="Button3" Content="3" HorizontalAlignment="Left" Margin="292,197,0,0" VerticalAlignment="Top" Width="35" Click="Button3_Click"/>

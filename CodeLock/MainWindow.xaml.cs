@@ -29,13 +29,27 @@ namespace CodeLock
             timer.Interval = new TimeSpan(0, 0, 1);
             timer.Start();
             SetBasePassword();
+            SetBaseAdminPassword();
         }
-        
+        private void SetBaseAdminPassword()
+        {
+            using (PasswordContext context = new PasswordContext())
+            {
+                if (!context.admins.Any(x => x.AdminID == 1))
+                {
+                    Admin admin = new Admin();
+                    admin.AdminPassword = GetPasswordHash("9999");
+                    context.admins.Add(admin);
+                    context.SaveChanges();
+                }
+            }
+
+        }
         private void SetBasePassword()
         {
             using (PasswordContext context = new PasswordContext())
             {
-                if (!context.passwords.Any(x => x.Avaliable == "Avaliable"))
+                if (!context.passwords.Any(x => x.Available == "Available"))
                 {
                     GeneratePassword("1111");
                 }
@@ -111,14 +125,13 @@ namespace CodeLock
         }
         private void Control_Click(object sender, RoutedEventArgs e)
         {
-
         }
         private void OpenButton_Click(object sender, RoutedEventArgs e)
         {
             string str = "";
             using (PasswordContext context = new PasswordContext())
             {
-                var s = context.passwords.Single(x => x.Avaliable == "Avaliable");
+                var s = context.passwords.Single(x => x.Available == "Available");
                 str = s.Pass;    
             }
             if (GetPasswordHash(PasswordField.Text) == str)
@@ -160,11 +173,10 @@ namespace CodeLock
             {
                 Password pass = new Password();
                 pass.Pass = GetPasswordHash(str);
-                pass.Avaliable = "Avaliable";
+                pass.Available = "Available";
                 context.passwords.Add(pass);
                 context.SaveChanges();
             }
         }
-
     }
 }
