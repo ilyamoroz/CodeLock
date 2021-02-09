@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Threading;
 using System.Windows;
 using CodeLock.State;
+using System.Media;
 
 namespace CodeLock
 {
@@ -91,6 +92,16 @@ namespace CodeLock
             if (PasswordField.Text.Length < 4)
                 PasswordField.Text += Button0.Content.ToString();
         }
+        private void CallButton_Click(object sender, RoutedEventArgs e)
+        {
+            SoundPlayer sp = new SoundPlayer();
+            sp.SoundLocation = "../../call.wav";
+            sp.Play();
+        }
+        private void Control_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
         private void OpenButton_Click(object sender, RoutedEventArgs e)
         {
             string str = "";
@@ -120,7 +131,7 @@ namespace CodeLock
         {
             string s = PasswordField.Text;
 
-            if (s.Length > 1)
+            if (s.Length >= 1)
             {
                 s = s.Substring(0, s.Length - 1);
             }
@@ -145,5 +156,6 @@ namespace CodeLock
                 context.SaveChanges();
             }
         }
+
     }
 }
