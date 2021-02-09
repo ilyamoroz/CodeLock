@@ -8,19 +8,19 @@ namespace CodeLock.State
 {
     public class Door
     {
-        IDoorState currentState { get; set; }
+        public IDoorState currentState { get; set; }
         public Door(IDoorState state)
         {
             currentState = state;
         }
         public string OpenDoor()
         {
-            currentState.OpenDoor();
+            currentState.OpenDoor(this);
             return "Unlock";
         }
         public string CloseDoor()
         {
-            currentState.CloseDoor();
+            currentState.CloseDoor(this);
             return "Lock";
         }
     }

@@ -8,7 +8,7 @@ namespace CodeLock.State
 {
     public interface IDoorState
     {
-        void OpenDoor();
-        void CloseDoor();
+        void OpenDoor(Door door);
+        void CloseDoor(Door door);
     }
 }

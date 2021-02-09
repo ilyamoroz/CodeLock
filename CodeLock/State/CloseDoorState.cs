@@ -5,15 +5,14 @@ namespace CodeLock.State
 {
     public class CloseDoorState : IDoorState
     {
-        Door door;
-        public void CloseDoor()
+        public void CloseDoor(Door door)
         {
             MessageBox.Show("Door is Lock");
         }
 
-        public void OpenDoor()
+        public void OpenDoor(Door door)
         {
-            door = new Door(new OpenDoorState());
+            door.currentState =  new OpenDoorState();
         }
     }
 }

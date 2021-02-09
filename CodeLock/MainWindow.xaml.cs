@@ -28,6 +28,18 @@ namespace CodeLock
             timer.Tick += new EventHandler(timer_Tick);
             timer.Interval = new TimeSpan(0, 0, 1);
             timer.Start();
+            SetBasePassword();
+        }
+        
+        private void SetBasePassword()
+        {
+            using (PasswordContext context = new PasswordContext())
+            {
+                if (!context.passwords.Any(x => x.Avaliable == "Avaliable"))
+                {
+                    GeneratePassword("1111");
+                }
+            }
         }
         private void timer_Tick(object sender, EventArgs e)
         {
@@ -35,7 +47,6 @@ namespace CodeLock
             {
                 openTime++;
             }
-            timerLabel.Content = openTime.ToString();
             if (openTime == 60)
             {
                 openTime = 0;
@@ -135,7 +146,6 @@ namespace CodeLock
             {
                 s = s.Substring(0, s.Length - 1);
             }
-
             PasswordField.Text = s;
         }
         private string GetPasswordHash(string inputText)
@@ -144,11 +154,10 @@ namespace CodeLock
             var hash = md5.ComputeHash(Encoding.UTF8.GetBytes(inputText));
             return Convert.ToBase64String(hash);
         }
-        private void GeneratePassword()
+        private void GeneratePassword(string str)
         {
             using (PasswordContext context = new PasswordContext())
             {
-                string str = PasswordField.Text;
                 Password pass = new Password();
                 pass.Pass = GetPasswordHash(str);
                 pass.Avaliable = "Avaliable";
