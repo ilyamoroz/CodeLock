@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CodeLock.DataModel;
 using System.Security.Cryptography;
+using System.Net.NetworkInformation;
 
 namespace CodeLock
 {
@@ -70,6 +71,31 @@ namespace CodeLock
                 context.SaveChanges();
             }
             GeneratePassword(newPassword);
+        }
+        private string GetMACAddress()
+        {
+            NetworkInterface[] nics = NetworkInterface.GetAllNetworkInterfaces();
+            String sMacAddress = string.Empty;
+            foreach (NetworkInterface adapter in nics)
+            {
+                if (sMacAddress == String.Empty)// only return MAC Address from first card  
+                {
+                    IPInterfaceProperties properties = adapter.GetIPProperties();
+                    sMacAddress = adapter.GetPhysicalAddress().ToString();
+                }
+            }
+            return sMacAddress;
+        }
+        public void SetLoginAttempt(string password)
+        {
+            using (DataBaseContext context = new DataBaseContext())
+            {
+                LoginAttempts attempt = new LoginAttempts();
+                attempt.Passwords = GetPasswordHash(password);
+                attempt.MacAddress = GetMACAddress();
+                context.attempts.Add(attempt);
+                context.SaveChanges();
+            }
         }
     }
 }

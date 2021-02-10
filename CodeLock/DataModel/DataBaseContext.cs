@@ -13,6 +13,7 @@
         }
         public DbSet<Password> passwords { get; set; }
         public DbSet<Admin> admins { get; set; }
+        public DbSet<LoginAttempts> attempts { get; set; }
     }
 
    

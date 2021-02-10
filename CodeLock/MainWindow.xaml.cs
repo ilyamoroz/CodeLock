@@ -30,6 +30,7 @@ namespace CodeLock
             timer.Tick += new EventHandler(timer_Tick);
             timer.Interval = new TimeSpan(0, 0, 1);
             timer.Start();
+
             db.SetBasePassword();
             db.SetBaseAdminPassword();
         }
@@ -140,6 +141,13 @@ namespace CodeLock
             {
                 StatusLabel.Content = "Status: " + door.OpenDoor();
                 isOpen = true;
+                OpenButton.Visibility = Visibility.Hidden;
+                CloseBTN.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                MessageBox.Show("The password was entered incorrectly");
+                db.SetLoginAttempt(PasswordField.Text);
             }
             PasswordField.Text = "";
         }
@@ -163,7 +171,12 @@ namespace CodeLock
             }
             PasswordField.Text = s;
         }
-        
-        
+
+        private void CloseBTN_Click(object sender, RoutedEventArgs e)
+        {
+            LockDoor();
+            OpenButton.Visibility = Visibility.Visible;
+            CloseBTN.Visibility = Visibility.Hidden;
+        }
     }
 }
