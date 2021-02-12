@@ -7,7 +7,7 @@ namespace CodeLock.State
     {
         public void CloseDoor(Door door)
         {
-            door.currentState = new CloseDoorState();
+            door.TransitionTo(new CloseDoorState());
         }
 
         public void OpenDoor(Door door)

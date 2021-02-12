@@ -12,7 +12,7 @@ namespace CodeLock.State
 
         public void OpenDoor(Door door)
         {
-            door.currentState =  new OpenDoorState();
+            door.TransitionTo(new OpenDoorState());
         }
     }
 }

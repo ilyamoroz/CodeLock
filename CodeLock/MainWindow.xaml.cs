@@ -15,11 +15,10 @@ namespace CodeLock
     /// </summary>
     public partial class MainWindow : Window
     {
-        private bool isOpen = false;
         private int openTime = 0;
-        Door door;
-
         private bool IsAdmin = false;
+
+        Door door;
         Database db = new Database();
         public MainWindow()
         {
@@ -38,7 +37,7 @@ namespace CodeLock
         
         private void timer_Tick(object sender, EventArgs e)
         {
-            if (isOpen)
+            if (door.currentState.GetType().Name == nameof(OpenDoorState))
             {
                 openTime++;
             }
@@ -48,7 +47,6 @@ namespace CodeLock
                 LockDoor();
             }
         }
-        
         private void Button1_Click(object sender, RoutedEventArgs e)
         {
             if(PasswordField.Text.Length < 4)
@@ -139,8 +137,9 @@ namespace CodeLock
         {
             if (db.GetPasswordHash(PasswordField.Text) == db.GetPassword())
             {
-                StatusLabel.Content = "Status: " + door.OpenDoor();
-                isOpen = true;
+                door.Open();
+                StatusLabel.Content = "Status: " + CheckDoorStatus();
+
                 OpenButton.Visibility = Visibility.Hidden;
                 CloseBTN.Visibility = Visibility.Visible;
             }
@@ -153,9 +152,9 @@ namespace CodeLock
         }
         private void LockDoor()
         {
-            StatusLabel.Content = "Status: " + door.CloseDoor();
+            door.Close();
+            StatusLabel.Content = "Status: " + CheckDoorStatus();
             PasswordField.Text = "";
-            isOpen = false;
         }
         private void ClearButton_Click(object sender, RoutedEventArgs e)
         {
@@ -171,12 +170,24 @@ namespace CodeLock
             }
             PasswordField.Text = s;
         }
-
         private void CloseBTN_Click(object sender, RoutedEventArgs e)
         {
             LockDoor();
             OpenButton.Visibility = Visibility.Visible;
             CloseBTN.Visibility = Visibility.Hidden;
+        }
+        private string CheckDoorStatus()
+        {
+            string status = string.Empty;
+            if (door.currentState.GetType().Name == nameof(OpenDoorState))
+            {
+                status = "Unlock";
+            }
+            else if(door.currentState.GetType().Name == nameof(CloseDoorState))
+            {
+                status = "Lock";
+            }
+            return status;
         }
     }
 }

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CodeLock.State
 {
@@ -11,17 +7,19 @@ namespace CodeLock.State
         public IDoorState currentState { get; set; }
         public Door(IDoorState state)
         {
+            this.TransitionTo(state);
+        }
+        public void TransitionTo(IDoorState state)
+        {
             currentState = state;
         }
-        public string OpenDoor()
+        public void Open()
         {
             currentState.OpenDoor(this);
-            return "Unlock";
         }
-        public string CloseDoor()
+        public void Close()
         {
             currentState.CloseDoor(this);
-            return "Lock";
         }
     }
 }
