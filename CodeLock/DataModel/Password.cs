@@ -16,5 +16,13 @@ namespace CodeLock.DataModel
         public string Pass { get; set; }
         [Required]
         public string Available { get; set; }
+
+        [Required]
+        public string Deleted { get; set; }
+
+        [Required]
+        public int AdminsPass { get; set; }
+
+        public virtual Admin Admin { get; set; }
     }
 }

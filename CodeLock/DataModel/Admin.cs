@@ -14,5 +14,7 @@ namespace CodeLock.DataModel
         [MaxLength(1000)]
         [Required]
         public string AdminPassword { get; set; }
+
+        public virtual ICollection<Password> PasswordsAdmin { get; set; }
     }
 }

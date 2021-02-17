@@ -10,16 +10,15 @@ using System.Media;
 
 namespace CodeLock
 {
-    /// <summary>
-    /// Логика взаимодействия для MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         private int openTime = 0;
         private bool IsAdmin = false;
+        private int adminID = 0;
 
         Door door;
         Database db = new Database();
+        
         public MainWindow()
         {
             InitializeComponent();
@@ -44,6 +43,8 @@ namespace CodeLock
             if (openTime == 60)
             {
                 openTime = 0;
+                IsAdmin = false;
+                CloseBTN.Visibility = Visibility.Hidden;
                 LockDoor();
             }
         }
@@ -105,17 +106,16 @@ namespace CodeLock
         }
         private void Control_Click(object sender, RoutedEventArgs e)
         {
-            if (door.currentState.GetType().Name.ToString() == nameof(OpenDoorState))
+            if (door.currentState.GetType().Name == nameof(OpenDoorState))
             {
                 if (IsAdmin)
                 {
                     db.ChangePassword(PasswordField.Text);
-
                     User_label.Content = "";
                 }
 
-                if (db.GetPasswordHash(PasswordField.Text) == GetAdminPassword() && IsAdmin == false)
-                {
+                if (db.GetPasswordHash(PasswordField.Text) == db.GetAdminPassword(adminID) && IsAdmin == false)
+                {   
                     User_label.Content = "Admin";
                     PasswordField.Text = "";
                     IsAdmin = true;
@@ -123,25 +123,17 @@ namespace CodeLock
                 PasswordField.Text = "";
             }
         }
-        private string GetAdminPassword()
-        {
-            string str = "";
-            using (DataBaseContext context = new DataBaseContext())
-            {
-                var s = context.admins.Single(x => x.AdminID == 1);
-                str = s.AdminPassword;
-            }
-            return str;
-        }
         private void OpenButton_Click(object sender, RoutedEventArgs e)
         {
-            if (db.GetPasswordHash(PasswordField.Text) == db.GetPassword())
+            if (db.GetPasswordHash(PasswordField.Text) == db.GetPassword(PasswordField.Text))
             {
                 door.Open();
                 StatusLabel.Content = "Status: " + CheckDoorStatus();
 
                 OpenButton.Visibility = Visibility.Hidden;
                 CloseBTN.Visibility = Visibility.Visible;
+
+                adminID = db.adminID;
             }
             else
             {
@@ -174,7 +166,9 @@ namespace CodeLock
         {
             LockDoor();
             OpenButton.Visibility = Visibility.Visible;
+            IsAdmin = false;
             CloseBTN.Visibility = Visibility.Hidden;
+
         }
         private string CheckDoorStatus()
         {

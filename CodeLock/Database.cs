@@ -6,11 +6,15 @@ using System.Threading.Tasks;
 using CodeLock.DataModel;
 using System.Security.Cryptography;
 using System.Net.NetworkInformation;
+using System.Windows.Media.Animation;
 
 namespace CodeLock
 {
     public class Database
     {
+        public int adminID = 0;
+        private string userPass = "";
+
         public void SetBasePassword()
         {
             using (DataBaseContext context = new DataBaseContext())
@@ -28,17 +32,30 @@ namespace CodeLock
                 Password pass = new Password();
                 pass.Pass = GetPasswordHash(str);
                 pass.Available = "Available";
+                pass.Deleted = "Non-delete";
+                pass.AdminsPass = adminID;
                 context.passwords.Add(pass);
                 context.SaveChanges();
             }
         }
-        public string GetPassword()
+        public string GetPassword(string password)
         {
             string str = "";
+            string pass = GetPasswordHash(password);
             using (DataBaseContext context = new DataBaseContext())
             {
-                var s = context.passwords.Single(x => x.Available == "Available");
-                str = s.Pass;
+                var s = context.passwords.Where(x => x.Pass == pass).ToList();
+                foreach (var item in s)
+                {
+                    if (item.Available == "Available")
+                    {
+                        str = item.Pass;
+
+                        adminID = item.AdminsPass;
+
+                        userPass = item.Pass;
+                    }
+                }
             }
             return str;
         }
@@ -61,13 +78,20 @@ namespace CodeLock
                 }
             }
 
+
         }
         public void ChangePassword(string newPassword)
         {
             using (DataBaseContext context = new DataBaseContext())
             {
-                Password pass = context.passwords.Single(x => x.Available == "Available");
-                pass.Available = "Non-Available";
+                var pass = context.passwords.Where(x => x.Pass == userPass).ToList();
+                foreach (var item in pass)
+                {
+                    if (item.Available == "Available")
+                    {
+                        item.Available = "Non-Available";
+                    }
+                }
                 context.SaveChanges();
             }
             GeneratePassword(newPassword);
@@ -97,5 +121,16 @@ namespace CodeLock
                 context.SaveChanges();
             }
         }
+        public string GetAdminPassword(int adminID)
+        {
+            string str = "";
+            using (DataBaseContext context = new DataBaseContext())
+            {
+                var s = context.admins.Single(x => x.AdminID == adminID);
+                str = s.AdminPassword;
+            }
+            return str;
+        }
     }
+
 }
