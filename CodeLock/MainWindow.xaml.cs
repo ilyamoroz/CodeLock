@@ -1,8 +1,6 @@
 ﻿using CodeLock.DataModel;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows.Threading;
 using System.Windows;
 using CodeLock.State;
@@ -10,9 +8,6 @@ using System.Media;
 
 namespace CodeLock
 {
-    /// <summary>
-    /// Логика взаимодействия для MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         private int openTime = 0;
@@ -37,7 +32,7 @@ namespace CodeLock
         
         private void timer_Tick(object sender, EventArgs e)
         {
-            if (door.currentState.GetType().Name == nameof(OpenDoorState))
+            if (door.state == DoorState.Open)
             {
                 openTime++;
             }
@@ -105,7 +100,7 @@ namespace CodeLock
         }
         private void Control_Click(object sender, RoutedEventArgs e)
         {
-            if (door.currentState.GetType().Name.ToString() == nameof(OpenDoorState))
+            if (door.state == DoorState.Open)
             {
                 if (IsAdmin)
                 {
@@ -179,11 +174,11 @@ namespace CodeLock
         private string CheckDoorStatus()
         {
             string status = string.Empty;
-            if (door.currentState.GetType().Name == nameof(OpenDoorState))
+            if (door.state == DoorState.Open)
             {
                 status = "Unlock";
             }
-            else if(door.currentState.GetType().Name == nameof(CloseDoorState))
+            else if(door.state == DoorState.Close)
             {
                 status = "Lock";
             }

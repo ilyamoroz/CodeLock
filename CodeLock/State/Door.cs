@@ -4,7 +4,8 @@ namespace CodeLock.State
 {
     public class Door
     {
-        public IDoorState currentState { get; set; }
+        IDoorState currentState { get; set; }
+        public DoorState state;
         public Door(IDoorState state)
         {
             this.TransitionTo(state);
@@ -16,10 +17,12 @@ namespace CodeLock.State
         public void Open()
         {
             currentState.OpenDoor(this);
+            state = DoorState.Open;
         }
         public void Close()
         {
             currentState.CloseDoor(this);
+            state = DoorState.Close;
         }
     }
 }
