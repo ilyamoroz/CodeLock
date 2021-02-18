@@ -5,6 +5,7 @@ using System.Windows.Threading;
 using System.Windows;
 using CodeLock.State;
 using System.Media;
+using  Serilog;
 
 namespace CodeLock
 {
@@ -24,6 +25,8 @@ namespace CodeLock
             timer.Tick += new EventHandler(timer_Tick);
             timer.Interval = new TimeSpan(0, 0, 1);
             timer.Start();
+
+            Log.Logger = new LoggerConfiguration().WriteTo.File(@"../../information.log").CreateLogger();
 
             db.SetBasePassword();
             db.SetBaseAdminPassword();
@@ -97,6 +100,7 @@ namespace CodeLock
             SoundPlayer sp = new SoundPlayer();
             sp.SoundLocation = "../../call.wav";
             sp.Play();
+            Log.Information("The bell rang");
         }
         private void Control_Click(object sender, RoutedEventArgs e)
         {
@@ -107,6 +111,7 @@ namespace CodeLock
                     db.ChangePassword(PasswordField.Text);
 
                     User_label.Content = "";
+                    Log.Information("The password changed");
                 }
 
                 if (db.GetPasswordHash(PasswordField.Text) == GetAdminPassword() && IsAdmin == false)
@@ -114,6 +119,7 @@ namespace CodeLock
                     User_label.Content = "Admin";
                     PasswordField.Text = "";
                     IsAdmin = true;
+                    Log.Information("Entered by admin");
                 }
                 PasswordField.Text = "";
             }
@@ -137,10 +143,13 @@ namespace CodeLock
 
                 OpenButton.Visibility = Visibility.Hidden;
                 CloseBTN.Visibility = Visibility.Visible;
+                Log.Information("The door is open");
             }
             else
             {
                 MessageBox.Show("The password was entered incorrectly");
+
+                Log.Information("Login attempt");
                 db.SetLoginAttempt(PasswordField.Text);
             }
             PasswordField.Text = "";
@@ -150,6 +159,7 @@ namespace CodeLock
             door.Close();
             StatusLabel.Content = "Status: " + CheckDoorStatus();
             PasswordField.Text = "";
+            Log.Information("The door is close");
         }
         private void ClearButton_Click(object sender, RoutedEventArgs e)
         {
