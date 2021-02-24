@@ -26,5 +26,8 @@
         <Button x:Name="ClearButton" Content="C" HorizontalAlignment="Left" Margin="199,272,0,0" VerticalAlignment="Top" Width="35" Click="ClearButton_Click"/>
         <Label x:Name="User_label" Content="" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
         <Button x:Name="CloseBTN" Content="Close" HorizontalAlignment="Left" Margin="411,222,0,0" VerticalAlignment="Top" Width="75" Click="CloseBTN_Click" Visibility="Hidden"/>
+        <TextBox x:Name="AdminPassChangeBox" HorizontalAlignment="Left" Height="23" Margin="199,133,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="128" Background="#FFE8E8E8"/>
+        <RadioButton x:Name="AdminRadioBtn" Content="" HorizontalAlignment="Left" Margin="312,137,0,0" VerticalAlignment="Top"/>
+        <RadioButton x:Name="UserRadioBtn" Content="" HorizontalAlignment="Left" Margin="312,163,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>

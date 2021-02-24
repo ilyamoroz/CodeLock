@@ -12,7 +12,7 @@ namespace CodeLock
 {
     public class Database
     {
-        public int adminID = 0;
+        public static int adminID = 1;
         private string userPass = "";
 
         public void SetBasePassword()
@@ -96,6 +96,22 @@ namespace CodeLock
             }
             GeneratePassword(newPassword);
         }
+        public void ChangeAdminPass(string newPassword)
+        {
+            using (DataBaseContext context = new DataBaseContext())
+            {
+
+                var pass = context.admins.Where(x => x.AdminID == adminID).ToList();
+                foreach (var item in pass)
+                {
+                    if (item.AdminPassword == item.AdminPassword.Normalize())
+                    {
+                        item.AdminPassword = GetPasswordHash(newPassword);
+                    }
+                }
+                context.SaveChanges();
+            }
+        }
         private string GetMACAddress()
         {
             NetworkInterface[] nics = NetworkInterface.GetAllNetworkInterfaces();
@@ -121,7 +137,7 @@ namespace CodeLock
                 context.SaveChanges();
             }
         }
-        public string GetAdminPassword(int adminID)
+        public string GetAdminPassword()
         {
             string str = "";
             using (DataBaseContext context = new DataBaseContext())
