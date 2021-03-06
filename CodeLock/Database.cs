@@ -15,6 +15,7 @@ namespace CodeLock
         public static int adminID = 1;
         private string userPass = "";
 
+        //Задаёт стандартый пароль в базе данных(если она пустая)
         public void SetBasePassword()
         {
             using (DataBaseContext context = new DataBaseContext())
@@ -25,6 +26,8 @@ namespace CodeLock
                 }
             }
         }
+
+        //Создаёт запись в базе данных для подальшого использования 
         public void GeneratePassword(string str)
         {
             using (DataBaseContext context = new DataBaseContext())
@@ -38,6 +41,8 @@ namespace CodeLock
                 context.SaveChanges();
             }
         }
+
+        //Получает пароль и хеширует его при записи в бд
         public string GetPassword(string password)
         {
             string str = "";
@@ -59,12 +64,16 @@ namespace CodeLock
             }
             return str;
         }
+
+        // Функция хеширования
         public string GetPasswordHash(string inputText)
         {
             var md5 = MD5.Create();
             var hash = md5.ComputeHash(Encoding.UTF8.GetBytes(inputText));
             return Convert.ToBase64String(hash);
         }
+
+        //Задаёт пароль админа, и хешируэт его
         public void SetBaseAdminPassword()
         {
             using (DataBaseContext context = new DataBaseContext())
@@ -80,6 +89,8 @@ namespace CodeLock
 
 
         }
+
+        //Изменяет пароль юзера и созраняет его в бд для ведения учёта паролей
         public void ChangePassword(string newPassword)
         {
             using (DataBaseContext context = new DataBaseContext())
@@ -96,6 +107,8 @@ namespace CodeLock
             }
             GeneratePassword(newPassword);
         }
+
+        //Изменяет пароль админа
         public void ChangeAdminPass(string newPassword)
         {
             using (DataBaseContext context = new DataBaseContext())
@@ -112,6 +125,8 @@ namespace CodeLock
                 context.SaveChanges();
             }
         }
+
+        //Пяолучает мак адрес компютера и делает запись в бд (Срабатывает при неправельном вводе пароля юзера)
         private string GetMACAddress()
         {
             NetworkInterface[] nics = NetworkInterface.GetAllNetworkInterfaces();
@@ -126,6 +141,8 @@ namespace CodeLock
             }
             return sMacAddress;
         }
+
+        //Задаёт информацию для записи в бд
         public void SetLoginAttempt(string password)
         {
             using (DataBaseContext context = new DataBaseContext())
@@ -137,6 +154,8 @@ namespace CodeLock
                 context.SaveChanges();
             }
         }
+
+        //Получает пароль админа для подальшой работы с ним 
         public string GetAdminPassword()
         {
             string str = "";

@@ -28,13 +28,14 @@ namespace CodeLock
             timer.Tick += new EventHandler(timer_Tick);
             timer.Interval = new TimeSpan(0, 0, 1);
             timer.Start();
-
+            //Запись в лог файл
             Log.Logger = new LoggerConfiguration().WriteTo.File(@"../../information.log").CreateLogger();
 
+            //Ввывод в командную строку 
             ConfigureNlog();
 
             logger = LogManager.GetCurrentClassLogger();
-
+            //
             UserRadioBtn.IsChecked = true;
             AdminRadioBtn.IsChecked = false;
             UserRadioBtn.Visibility = Visibility.Hidden;
@@ -45,6 +46,8 @@ namespace CodeLock
             db.SetBaseAdminPassword();
             db.SetBasePassword();
         }
+
+        //Таймер изпользуется для закрытия двери после истечения 1 минуты
         private void timer_Tick(object sender, EventArgs e)
         {
             if (door.state == DoorState.Open)
@@ -61,6 +64,8 @@ namespace CodeLock
                 LockDoor();
             }
         }
+
+        //Функции от Button1_Click по Button0_Click кновки ввода информации
         private void Button1_Click(object sender, RoutedEventArgs e)
         {
             if (PasswordField.Text.Length < 4 && AdminPassChangeBox.Text.Length < 4)
@@ -201,6 +206,8 @@ namespace CodeLock
                 }
             }
         }
+
+        //Кнопка звонка
         private void CallButton_Click(object sender, RoutedEventArgs e)
         {
             SoundPlayer sp = new SoundPlayer();
@@ -209,8 +216,11 @@ namespace CodeLock
             Log.Information("The bell rang");
             logger.Info("The bell rang");
         }
+
+        //Основная кнопка для взаимодействи я с паролями для их изменения и подальшой работы с ними 
         private void Control_Click(object sender, RoutedEventArgs e)
         {
+
             if (door.state == DoorState.Open)
             {
                 if (IsAdmin)
@@ -219,6 +229,7 @@ namespace CodeLock
 
                     AdminRadioBtn.Visibility = Visibility.Visible;
                     AdminPassChangeBox.Visibility = Visibility.Visible;
+                    //Если активна строка юзера 
                     if (UserRadioBtn.IsChecked == true)
                     {
                         db.ChangePassword(PasswordField.Text);
@@ -226,7 +237,7 @@ namespace CodeLock
                         Log.Information("The password changed");
                         logger.Info("The password changed");
                     }
-
+                    //Если активна строка админа
                     if (AdminRadioBtn.IsChecked == true)
                     {
                         db.ChangeAdminPass(AdminPassChangeBox.Text);
@@ -241,7 +252,7 @@ namespace CodeLock
 
                     UserRadioBtn.IsChecked = true;
                 }
-
+                //Вызывается функция изменения пароля
 
                 if (db.GetPasswordHash(PasswordField.Text) == db.GetAdminPassword() && IsAdmin == false)
                 {
@@ -270,6 +281,8 @@ namespace CodeLock
                 PasswordField.Text = "";
             }
         }
+
+        //Открытие двери
         private void OpenButton_Click(object sender, RoutedEventArgs e)
         {
             if (db.GetPasswordHash(PasswordField.Text) == db.GetPassword(PasswordField.Text))
@@ -292,6 +305,8 @@ namespace CodeLock
             }
             PasswordField.Text = "";
         }
+
+        //Изменения статуса двери
         private void LockDoor()
         {
             door.Close();
@@ -301,6 +316,8 @@ namespace CodeLock
             logger.Info("The door is close");
 
         }
+
+        //Кнопка очещения из строки 
         private void ClearButton_Click(object sender, RoutedEventArgs e)
         {
             if (UserRadioBtn.IsChecked == true)
@@ -334,6 +351,8 @@ namespace CodeLock
                 PasswordField.Text = adm;
             }
         }
+
+        //закрытие двери
         private void CloseBTN_Click(object sender, RoutedEventArgs e)
         {
             LockDoor();
@@ -350,6 +369,8 @@ namespace CodeLock
 
 
         }
+
+        //Проверяет статус двери
         private string CheckDoorStatus()
         {
             string status = string.Empty;
@@ -363,6 +384,8 @@ namespace CodeLock
             }
             return status;
         }
+
+        //Функция Nlog для вывода информации в командную строку 
         private void ConfigureNlog()
         {
             var config = new NLog.Config.LoggingConfiguration();
