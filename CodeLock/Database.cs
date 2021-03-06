@@ -22,13 +22,14 @@ namespace CodeLock
             {
                 if (!context.passwords.Any(x => x.Available == "Available"))
                 {
-                    GeneratePassword("1111");
+                    GeneratePassword("1111", 1);
+                    GeneratePassword("2222", 2);
                 }
             }
         }
 
         //Создаёт запись в базе данных для подальшого использования 
-        public void GeneratePassword(string str)
+        public void GeneratePassword(string str, int _adminID)
         {
             using (DataBaseContext context = new DataBaseContext())
             {
@@ -36,7 +37,7 @@ namespace CodeLock
                 pass.Pass = GetPasswordHash(str);
                 pass.Available = "Available";
                 pass.Deleted = "Non-delete";
-                pass.AdminsPass = adminID;
+                pass.AdminsPass = _adminID;
                 context.passwords.Add(pass);
                 context.SaveChanges();
             }
@@ -74,14 +75,14 @@ namespace CodeLock
         }
 
         //Задаёт пароль админа, и хешируэт его
-        public void SetBaseAdminPassword()
+        public void SetBaseAdminPassword(int _AdminID, string password)
         {
             using (DataBaseContext context = new DataBaseContext())
             {
-                if (!context.admins.Any(x => x.AdminID == 1))
+                if (!context.admins.Any(x => x.AdminID == _AdminID))
                 {
                     Admin admin = new Admin();
-                    admin.AdminPassword = GetPasswordHash("9999");
+                    admin.AdminPassword = GetPasswordHash(password);
                     context.admins.Add(admin);
                     context.SaveChanges();
                 }
@@ -105,7 +106,7 @@ namespace CodeLock
                 }
                 context.SaveChanges();
             }
-            GeneratePassword(newPassword);
+            GeneratePassword(newPassword, adminID);
         }
 
         //Изменяет пароль админа

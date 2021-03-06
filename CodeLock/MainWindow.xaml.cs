@@ -43,7 +43,8 @@ namespace CodeLock
             AdminRadioBtn.Visibility = Visibility.Hidden;
             AdminPassChangeBox.Visibility = Visibility.Hidden;
 
-            db.SetBaseAdminPassword();
+            db.SetBaseAdminPassword(1, "0000");
+            db.SetBaseAdminPassword(2, "9999");
             db.SetBasePassword();
         }
 
