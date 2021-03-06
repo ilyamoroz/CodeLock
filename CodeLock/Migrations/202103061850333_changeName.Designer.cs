@@ -7,13 +7,13 @@ namespace CodeLock.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.4.4")]
-    public sealed partial class adminId : IMigrationMetadata
+    public sealed partial class changeName : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(adminId));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(changeName));
         
         string IMigrationMetadata.Id
         {
-            get { return "202103061829093_adminId"; }
+            get { return "202103061850333_changeName"; }
         }
         
         string IMigrationMetadata.Source
