@@ -118,6 +118,10 @@
     <Compile Include="Migrations\202102161248391_deleteColum.designer.cs">
       <DependentUpon>202102161248391_deleteColum.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202103061829093_adminId.cs" />
+    <Compile Include="Migrations\202103061829093_adminId.designer.cs">
+      <DependentUpon>202103061829093_adminId.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="State\CloseDoorState.cs" />
     <Compile Include="State\Door.cs" />
@@ -176,6 +180,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202102161248391_deleteColum.resx">
       <DependentUpon>202102161248391_deleteColum.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202103061829093_adminId.resx">
+      <DependentUpon>202103061829093_adminId.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

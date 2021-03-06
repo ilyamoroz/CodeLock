@@ -21,7 +21,7 @@ namespace CodeLock.DataModel
         public string Deleted { get; set; }
 
         [Required]
-        public int AdminsPass { get; set; }
+        public int AdminID { get; set; }
 
         public virtual Admin Admin { get; set; }
     }

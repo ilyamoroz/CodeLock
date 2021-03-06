@@ -1,11 +1,8 @@
-﻿using CodeLock.DataModel;
-using System;
-using System.Linq;
+﻿using System;
 using System.Windows.Threading;
 using System.Windows;
 using CodeLock.State;
 using System.Media;
-using CodeLock.Migrations;
 using NLog;
 using Serilog;
 
@@ -224,35 +221,6 @@ namespace CodeLock
 
             if (door.state == DoorState.Open)
             {
-                if (IsAdmin)
-                {
-                    UserRadioBtn.Visibility = Visibility.Visible;
-
-                    AdminRadioBtn.Visibility = Visibility.Visible;
-                    AdminPassChangeBox.Visibility = Visibility.Visible;
-                    //Если активна строка юзера 
-                    if (UserRadioBtn.IsChecked == true)
-                    {
-                        db.ChangePassword(PasswordField.Text);
-                        User_label.Content = "";
-                        Log.Information("The password changed");
-                        logger.Info("The password changed");
-                    }
-                    //Если активна строка админа
-                    if (AdminRadioBtn.IsChecked == true)
-                    {
-                        db.ChangeAdminPass(AdminPassChangeBox.Text);
-                        User_label.Content = "";
-                        Log.Information("Entered by admin");
-                        logger.Info("Entered by admin");
-                    }
-                    UserRadioBtn.Visibility = Visibility.Hidden;
-                    AdminRadioBtn.Visibility = Visibility.Hidden;
-                    AdminPassChangeBox.Visibility = Visibility.Hidden;
-                    AdminPassChangeBox.Text = "";
-
-                    UserRadioBtn.IsChecked = true;
-                }
                 //Вызывается функция изменения пароля
 
                 if (db.GetPasswordHash(PasswordField.Text) == db.GetAdminPassword() && IsAdmin == false)
@@ -279,7 +247,44 @@ namespace CodeLock
                         }
                     }
                 }
+                if (IsAdmin == true)
+                {
+                    //Если активна строка юзера 
+                    if (UserRadioBtn.IsChecked == true)
+                    {
+                        
+                        db.ChangePassword(PasswordField.Text);
+
+                        User_label.Content = "";
+
+                        Log.Information("The password changed");
+                        logger.Info("The password changed");
+
+                        UserRadioBtn.Visibility = Visibility.Visible;
+
+                        AdminRadioBtn.Visibility = Visibility.Visible;
+                        AdminPassChangeBox.Visibility = Visibility.Visible;
+                    }
+
+
+                    //Если активна строка админа
+                    if (AdminRadioBtn.IsChecked == true)
+                    {
+                        db.ChangeAdminPass(AdminPassChangeBox.Text);
+                        User_label.Content = "";
+                        Log.Information("Entered by admin");
+                        logger.Info("Entered by admin");
+
+                        UserRadioBtn.Visibility = Visibility.Hidden;
+                        AdminRadioBtn.Visibility = Visibility.Hidden;
+                        AdminPassChangeBox.Visibility = Visibility.Hidden;
+                        AdminPassChangeBox.Text = "";
+                    }
+                    
+                }
+
                 PasswordField.Text = "";
+                UserRadioBtn.IsChecked = true;
             }
         }
 
@@ -367,6 +372,8 @@ namespace CodeLock
 
             AdminRadioBtn.Visibility = Visibility.Hidden;
             AdminPassChangeBox.Visibility = Visibility.Hidden;
+
+            User_label.Visibility = Visibility.Hidden;
 
 
         }

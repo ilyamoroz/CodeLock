@@ -31,15 +31,18 @@ namespace CodeLock
         //Создаёт запись в базе данных для подальшого использования 
         public void GeneratePassword(string str, int _adminID)
         {
-            using (DataBaseContext context = new DataBaseContext())
+            if (str != "")
             {
-                Password pass = new Password();
-                pass.Pass = GetPasswordHash(str);
-                pass.Available = "Available";
-                pass.Deleted = "Non-delete";
-                pass.AdminsPass = _adminID;
-                context.passwords.Add(pass);
-                context.SaveChanges();
+                using (DataBaseContext context = new DataBaseContext())
+                {
+                    Password pass = new Password();
+                    pass.Pass = GetPasswordHash(str);
+                    pass.Available = "Available";
+                    pass.Deleted = "Non-delete";
+                    pass.AdminID = _adminID;
+                    context.passwords.Add(pass);
+                    context.SaveChanges();
+                }
             }
         }
 
@@ -57,7 +60,7 @@ namespace CodeLock
                     {
                         str = item.Pass;
 
-                        adminID = item.AdminsPass;
+                        adminID = item.AdminID;
 
                         userPass = item.Pass;
                     }
@@ -94,19 +97,23 @@ namespace CodeLock
         //Изменяет пароль юзера и созраняет его в бд для ведения учёта паролей
         public void ChangePassword(string newPassword)
         {
-            using (DataBaseContext context = new DataBaseContext())
+            if (newPassword != "")
             {
-                var pass = context.passwords.Where(x => x.Pass == userPass).ToList();
-                foreach (var item in pass)
+                using (DataBaseContext context = new DataBaseContext())
                 {
-                    if (item.Available == "Available")
+                    var pass = context.passwords.Where(x => x.Pass == userPass).ToList();
+                    foreach (var item in pass)
                     {
-                        item.Available = "Non-Available";
+                        if (item.Available == "Available")
+                        {
+                            item.Available = "Non-Available";
+                        }
                     }
+                    context.SaveChanges();
                 }
-                context.SaveChanges();
+                GeneratePassword(newPassword, adminID);
             }
-            GeneratePassword(newPassword, adminID);
+            
         }
 
         //Изменяет пароль админа
